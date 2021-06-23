@@ -18,6 +18,7 @@ class VideoTexture : public Texture
 
 	private:
 		vita2d_texture* texture_;
+		bool draw_;
 };
 
 #endif

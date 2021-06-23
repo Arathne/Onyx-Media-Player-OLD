@@ -9,6 +9,7 @@
 #define PI 3.14159265
 #include <math.h>
 #include <string>
+#include <video.h>
 
 int main ()
 {
@@ -16,11 +17,18 @@ int main ()
 	{
 		Renderer::clear();
 		Input::poll();
-
-		if (Input::ended(SCE_CTRL_CROSS))
+		
+		if (Input::began(SCE_CTRL_CROSS))
 		{
-			Log::add("ENDED");
+			Video::open("app0:gameplay.mp4");
 		}
+		else if (Input::began(SCE_CTRL_CIRCLE))
+		{
+			Video::open("app0:gameplay2.mp4");
+		}
+		
+		Video::draw();
+		//Log::add(std::to_string(gameplay1.getTime()));
 
 		Log::draw();
 		Renderer::swap_buffer();

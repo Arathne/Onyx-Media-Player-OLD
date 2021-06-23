@@ -1,6 +1,7 @@
 #include <video_texture.h>
 
-VideoTexture::VideoTexture (void)
+VideoTexture::VideoTexture (void):
+	draw_(false)
 {
 	texture_ = (vita2d_texture*)malloc(sizeof(vita2d_texture));
 	texture_ -> palette_UID = 0;
@@ -22,9 +23,14 @@ void VideoTexture::update (const void* pData, unsigned int width, unsigned int h
 		height,
 		0
 	);
+
+	draw_ = true;
 }
 
 const vita2d_texture* VideoTexture::get_vita2d_ptr (void) const
 {
-	return texture_;
+	if (draw_)
+		return texture_;
+	else
+		return nullptr;
 }

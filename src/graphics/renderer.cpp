@@ -1,4 +1,4 @@
-#include "renderer.h"
+#include <renderer.h>
 
 Renderer Renderer::instance;
 
@@ -44,3 +44,12 @@ void Renderer::draw_text (std::string content, float x, float y, float scale, Co
 {
 	vita2d_pgf_draw_text(instance.pgf_font, x, y, color.convert_to_vita2d(), scale, content.c_str());
 }
+
+void Renderer::draw_texture (Texture & texture, float x, float y)
+{
+	if (texture.get_vita2d_ptr() != nullptr)
+	{
+		vita2d_draw_texture(texture.get_vita2d_ptr(), x, y);
+	}
+}
+

@@ -1,7 +1,9 @@
 #include <psp2/kernel/processmgr.h>
 
-#include "graphics/renderer.h"
+#include <renderer.h>
 #include <color.h>
+#include <png_texture.h>
+
 
 int main ()
 {

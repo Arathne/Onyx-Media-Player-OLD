@@ -4,6 +4,7 @@
 #include <vita2d.h>
 #include <string>
 #include <color.h>
+#include <texture.h>
 
 class Renderer
 {
@@ -16,6 +17,8 @@ class Renderer
 		
 		static void draw_text (std::string content, float x, float y, float scale);
 		static void draw_text (std::string content, float x, float y, float scale, Color color);
+		
+		static void draw_texture (Texture & texture, float x, float y);
 
 	private:
 		static Renderer instance;

@@ -31,6 +31,10 @@ target_link_libraries(${PROJECT_NAME}
 	SceDisplay_stub
 	SceCommonDialog_stub
 	ScePgf_stub
+	stdc++
+	pthread
+	png
+	z
 )
 
 vita_create_self(${PROJECT_NAME}.self ${PROJECT_NAME})

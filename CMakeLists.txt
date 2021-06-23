@@ -31,6 +31,7 @@ target_link_libraries(${PROJECT_NAME}
 	SceDisplay_stub
 	SceCommonDialog_stub
 	ScePgf_stub
+	SceCtrl_stub
 	stdc++
 	pthread
 	png

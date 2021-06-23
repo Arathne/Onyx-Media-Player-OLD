@@ -1,6 +1,7 @@
 set( SRC_FILES
 	src/main.cpp
 	src/log.cpp
+	src/input.cpp
 	src/graphics/renderer.cpp
 	src/graphics/color.cpp
 	src/graphics/png_texture.cpp

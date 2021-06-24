@@ -3,6 +3,8 @@ set( SRC_FILES
 	src/log.cpp
 	src/input.cpp
 	src/video.cpp
+	src/file_manager.cpp
+	src/file.cpp
 	src/graphics/renderer.cpp
 	src/graphics/color.cpp
 	src/graphics/png_texture.cpp

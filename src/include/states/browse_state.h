@@ -1,6 +1,7 @@
 #ifndef BROWSE_STATE_H
 #define BROWSE_STATE_H
 
+#include <file_manager.h>
 #include <states/state.h>
 #include <math.h>
 #include <vector>
@@ -15,9 +16,6 @@ class BrowseState : public State
 
                 State* process (void);
 		const char* get_name() const;
-	
-	private:
-		void search (const char* path);
 };
 
 #endif

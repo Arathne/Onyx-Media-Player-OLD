@@ -3,9 +3,14 @@
 
 int main ()
 {
-	while (true)
+	bool run_program = true;
+
+	while (run_program)
 	{
-		StateManager::process();
+		if (StateManager::process() != 0)
+		{
+			run_program = false;
+		}
 	}
 
 	sceKernelExitProcess(0);

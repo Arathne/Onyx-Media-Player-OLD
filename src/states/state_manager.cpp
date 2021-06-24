@@ -10,7 +10,7 @@ StateManager::StateManager (void)
 
 StateManager::~StateManager (void) {}
 
-void StateManager::process (void)
+int StateManager::process (void)
 {
 	if (instance.stack_.size() >= 0)
 	{
@@ -19,10 +19,13 @@ void StateManager::process (void)
 
 		if (current != next)
 		{
-			if (next == nullptr && instance.stack_.size() > 0)
+			if (next == nullptr)
 			{
 				Log::add(std::string("popping stack :: ") + std::string(current->get_name()));
 				instance.stack_.pop();
+
+				if (instance.stack_.empty())
+					return -1;
 			}
 			else
 			{
@@ -31,4 +34,6 @@ void StateManager::process (void)
 			}
 		}
 	}
+
+	return 0;
 }	

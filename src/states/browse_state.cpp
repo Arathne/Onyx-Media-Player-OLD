@@ -1,5 +1,4 @@
 #include <states/browse_state.h>
-#include <psp2/io/dirent.h>
 
 BrowseState::BrowseState (void) {}
 
@@ -7,7 +6,7 @@ BrowseState::~BrowseState (void) {}
 
 State* BrowseState::process (void) 
 {
-	BrowseState::search("ux0:vpk");
+	FileManager::search("ux0:vpk");
 
 	while (true)
 	{
@@ -25,33 +24,6 @@ const char* BrowseState::get_name() const
 {
 	return "browse state";
 }
-
-void BrowseState::search (const char* path)
-{
-	SceUID directory = sceIoDopen(path);
-	
-	SceIoDirent current;
-
-	while (sceIoDread(directory, &current) > 0)
-	{
-		std::string x;
-
-		if ((current.d_stat.st_mode & SCE_S_IFDIR) == SCE_S_IFDIR)
-		{
-			x = "directory";
-		}
-		else
-		{
-			x = "file";
-		}
-		
-		x = std::string(current.d_name) + std::string(" : ") + x;
-		Log::add(x);
-	}
-
-}
-
-
 
 
 

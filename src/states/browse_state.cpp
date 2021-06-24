@@ -6,7 +6,7 @@ BrowseState::~BrowseState (void) {}
 
 State* BrowseState::process (void) 
 {
-	FileManager::search("ux0:vpk");
+	FileManager::search("ux0:");
 	Carousel::set_list(FileManager::get_all());
 	
 	while (true)
@@ -24,7 +24,27 @@ State* BrowseState::process (void)
 		}
 		else if (Input::began(SCE_CTRL_CROSS))
 		{
+			if (Carousel::is_list_empty() == false)
+			{
+				File entry = Carousel::get_current_file();
+				if (entry.is_directory())
+				{
+					Log::add("RD/ " + entry.get_absolute_path());
+					FileManager::search(entry.get_absolute_path().c_str());
+        				Carousel::set_list(FileManager::get_all());
+				}
+			}
+		}
+		else if (Input::began(SCE_CTRL_CIRCLE))
+		{
+			std::string parent_dir = FileManager::get_parent_directory();
 			
+			if (parent_dir != FileManager::get_current_directory())
+			{
+				Log::add("RD/ " + parent_dir);
+				FileManager::search(parent_dir.c_str());
+        			Carousel::set_list(FileManager::get_all());
+			}
 		}
 
 		Carousel::draw();

@@ -13,7 +13,9 @@ class FileManager
 		~FileManager (void);
 		
 		static void search (const char* path);
-		static std::string get_last_search (void);
+		
+		static std::string get_parent_directory (void);
+		static std::string get_current_directory (void);
 
 		static const std::vector<File> get_directories (void);
 		static const std::vector<File> get_video_files (void);

@@ -5,7 +5,7 @@ StateManager StateManager::instance;
 StateManager::StateManager (void) 
 {
 	stack_.push(new InitialState());
-	Log::add("pushing stack :: initial state");
+	Log::add("S/PUSH :: initial state");
 }
 
 StateManager::~StateManager (void) {}
@@ -21,7 +21,7 @@ int StateManager::process (void)
 		{
 			if (next == nullptr)
 			{
-				Log::add(std::string("popping stack :: ") + std::string(current->get_name()));
+				Log::add(std::string("S/POP :: ") + std::string(current->get_name()));
 				instance.stack_.pop();
 
 				if (instance.stack_.empty())
@@ -29,7 +29,7 @@ int StateManager::process (void)
 			}
 			else
 			{
-				Log::add(std::string("pushing stack :: ") + std::string(next->get_name()));
+				Log::add(std::string("S/PUSH :: ") + std::string(next->get_name()));
 				instance.stack_.push(next);
 			}
 		}

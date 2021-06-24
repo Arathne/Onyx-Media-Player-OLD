@@ -1,9 +1,10 @@
 #ifndef VIDEO_TEXTURE_H
 #define VIDEO_TEXTURE_H
 
+#include <graphics/texture.h>
 #include <psp2/gxm.h>
+
 #include <vita2d.h>
-#include <texture.h>
 #include <cstdlib>
 
 class VideoTexture : public Texture 

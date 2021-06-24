@@ -1,4 +1,4 @@
-#include <png_texture.h>
+#include <graphics/png_texture.h>
 
 PNG_Texture::PNG_Texture (void) {}
 

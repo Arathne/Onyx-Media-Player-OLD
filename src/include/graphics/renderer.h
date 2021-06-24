@@ -1,10 +1,11 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
+#include <graphics/texture.h>
+#include <graphics/color.h>
+
 #include <vita2d.h>
 #include <string>
-#include <color.h>
-#include <texture.h>
 
 class Renderer
 {

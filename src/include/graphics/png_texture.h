@@ -1,7 +1,7 @@
 #ifndef PNG_TEXTURE_H
 #define PNG_TEXTURE_H
 
-#include <texture.h>
+#include <graphics/texture.h>
 
 class PNG_Texture : public Texture
 {

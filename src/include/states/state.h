@@ -1,9 +1,9 @@
 #ifndef STATE_H
 #define STATE_H
 
-#include <log.h>
-#include <renderer.h>
+#include <graphics/renderer.h>
 #include <input.h>
+#include <log.h>
 
 class State
 {

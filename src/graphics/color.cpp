@@ -1,4 +1,4 @@
-#include <color.h>
+#include <graphics/color.h>
 
 Color::Color (void):
 	red_(0),

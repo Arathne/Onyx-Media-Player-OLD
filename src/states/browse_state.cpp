@@ -7,6 +7,8 @@ BrowseState::~BrowseState (void) {}
 
 State* BrowseState::process (void) 
 {
+	BrowseState::search("ux0:vpk");
+
 	while (true)
 	{
 		Renderer::clear();
@@ -24,20 +26,30 @@ const char* BrowseState::get_name() const
 	return "browse state";
 }
 
-/*void open_directory (const char* path)
+void BrowseState::search (const char* path)
 {
 	SceUID directory = sceIoDopen(path);
-	SceIoDirent* current;
+	
+	SceIoDirent current;
 
-	while (sceIoDread(directory, current) > 0)
+	while (sceIoDread(directory, &current) > 0)
 	{
-		Log::add();		
+		std::string x;
+
+		if ((current.d_stat.st_mode & SCE_S_IFDIR) == SCE_S_IFDIR)
+		{
+			x = "directory";
+		}
+		else
+		{
+			x = "file";
+		}
+		
+		x = std::string(current.d_name) + std::string(" : ") + x;
+		Log::add(x);
 	}
 
-}*/
-
-
-
+}
 
 
 

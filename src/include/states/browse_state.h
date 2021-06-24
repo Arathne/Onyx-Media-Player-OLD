@@ -15,6 +15,9 @@ class BrowseState : public State
 
                 State* process (void);
 		const char* get_name() const;
+	
+	private:
+		void search (const char* path);
 };
 
 #endif

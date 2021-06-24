@@ -1,4 +1,4 @@
-#include <video_texture.h>
+#include <graphics/video_texture.h>
 
 VideoTexture::VideoTexture (void):
 	draw_(false)

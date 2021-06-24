@@ -12,8 +12,8 @@
 #include <cstdint>
 #include <cstring>
 
-#include <renderer.h>
-#include <video_texture.h>
+#include <graphics/renderer.h>
+#include <graphics/video_texture.h>
 
 #define ALIGN(x, a)	((((unsigned int)x)+((a)-1u))&(~((a)-1u)))
 #define PCM_BUFFER 4096

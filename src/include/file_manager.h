@@ -6,6 +6,7 @@
 #include <file.h>
 #include <vector>
 #include <log.h>
+#include <sort/merge_sort.h>
 
 class FileManager
 {
@@ -27,6 +28,7 @@ class FileManager
 		
 		std::string path_;
 		std::vector<File> entries_;
+		MergeSort sort;
 };
 
 #endif

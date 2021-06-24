@@ -18,9 +18,7 @@ void FileManager::search (const char* path)
 	int directories = 0;
 	int files = 0;
 	
-	std::string current_directory = FileManager::get_current_directory();
-	if (current_directory != "ux0:" && current_directory != "uma0:")
-		instance.entries_.push_back(File(". . .", FileManager::get_parent_directory(), true));
+	instance.entries_.push_back(File(". . .", FileManager::get_parent_directory(), true));
 
 	while (sceIoDread(search_uid, &current) > 0)
 	{
@@ -41,7 +39,9 @@ void FileManager::search (const char* path)
 		}
 	}
 
-	Log::add("SD :: " + std::to_string(directories) + "d " + std::to_string(files) + "f");
+	instance.sort.alphabetical(instance.entries_);
+
+	Log::add("SD/ :: " + std::to_string(directories) + "d " + std::to_string(files) + "f");
 
 	sceIoDclose(search_uid);
 }

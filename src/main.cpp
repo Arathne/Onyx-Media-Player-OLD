@@ -1,41 +1,23 @@
 #include <psp2/kernel/processmgr.h>
-
-#include <renderer.h>
-#include <color.h>
-#include <png_texture.h>
-#include <log.h>
-#include <input.h>
-
-#define PI 3.14159265
-#include <math.h>
-#include <string>
-#include <video.h>
+#include <states/state_manager.h>
 
 int main ()
 {
 	while (true)
 	{
-		Renderer::clear();
-		Input::poll();
-		
-		if (Input::began(SCE_CTRL_CROSS))
-		{
-			Video::open("app0:gameplay.mp4");
-		}
-		else if (Input::began(SCE_CTRL_CIRCLE))
-		{
-			Video::open("app0:gameplay2.mp4");
-		}
-		
-		Video::draw();
-		//Log::add(std::to_string(gameplay1.getTime()));
-
-		Log::draw();
-		Renderer::swap_buffer();
+		StateManager::process();
 	}
 
 	sceKernelExitProcess(0);
 }
+
+
+
+
+/*#define PI 3.14159265
+#include <math.h>
+#include <string>
+#include <video.h>*/
 
 /*float radius = 175;
 double angle = 0;

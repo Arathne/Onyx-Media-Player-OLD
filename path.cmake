@@ -7,4 +7,7 @@ set( SRC_FILES
 	src/graphics/color.cpp
 	src/graphics/png_texture.cpp
 	src/graphics/video_texture.cpp
+	src/states/state_manager.cpp
+	src/states/initial_state.cpp
+	src/states/browse_state.cpp
 )

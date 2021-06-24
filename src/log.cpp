@@ -20,7 +20,7 @@ void Log::add (std::string content)
 
 void Log::draw (void)
 {
-	float x = 960.0f * 0.75f;
+	float x = 960.0f * 0.6f;
 	float y = 30.0f;
 	
 	for (auto it = instance.list.begin(); it != instance.list.end(); it++)

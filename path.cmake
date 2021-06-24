@@ -5,6 +5,7 @@ set( SRC_FILES
 	src/video.cpp
 	src/file_manager.cpp
 	src/file.cpp
+	src/carousel.cpp
 	src/graphics/renderer.cpp
 	src/graphics/color.cpp
 	src/graphics/png_texture.cpp

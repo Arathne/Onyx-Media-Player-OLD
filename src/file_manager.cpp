@@ -8,6 +8,24 @@ FileManager::FileManager (void):
 
 FileManager::~FileManager (void) {}
 
+void FileManager::search (File file, int carousel_index)
+{
+	std::string path = file.get_absolute_path();
+
+	//if (file.get_name() != ". . .")
+	//{
+		SearchState state(path, carousel_index);
+		instance.history_.push(state);
+	//}
+	//else
+	//{
+		//if (instance.history_.empty() == false)
+		//	instance.history_.pop();
+	//}
+
+	FileManager::search(path.c_str());
+}
+
 void FileManager::search (const char* path)
 {
 	instance.path_ = path;
@@ -39,7 +57,7 @@ void FileManager::search (const char* path)
 		}
 	}
 
-	instance.sort.alphabetical(instance.entries_);
+	instance.sort_.alphabetical(instance.entries_);
 
 	Log::add("SD/ :: " + std::to_string(directories) + "d " + std::to_string(files) + "f");
 
@@ -48,19 +66,40 @@ void FileManager::search (const char* path)
 
 std::string FileManager::get_parent_directory (void)
 {
-	std::size_t found = instance.path_.find_last_of("/");
+	return FileManager::get_parent_directory(instance.path_);
+}
+
+std::string FileManager::get_parent_directory (std::string path)
+{
+	std::size_t found = path.find_last_of("/");
 	
 	if (found == std::string::npos)
 	{
-		return instance.path_;
+		return path;
 	}
 	
-	return instance.path_.substr(0, found);
+	return path.substr(0, found);
 }
 
 std::string FileManager::get_current_directory (void)
 {
 	return instance.path_;
+}
+
+int FileManager::go_back (void)
+{
+	if (instance.history_.empty())
+		return -1;
+
+	SearchState state = instance.history_.top();
+	std::string parent_path = FileManager::get_parent_directory(instance.path_);
+
+	FileManager::search(parent_path.c_str());
+	
+	instance.history_.pop();
+	Log::add("path: " + state.get_path());
+
+	return state.get_carousel_index();
 }
 
 const std::vector<File> FileManager::get_directories (void)
@@ -93,7 +132,7 @@ const std::vector<File> FileManager::get_video_files (void)
 	return files;
 }
 
-const std::vector<File> & FileManager::get_all (void)
+const std::vector<File> FileManager::get_all (void)
 {
 	return instance.entries_;
 }

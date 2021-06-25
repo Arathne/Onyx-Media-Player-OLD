@@ -14,5 +14,6 @@ set( SRC_FILES
 	src/states/initial_state.cpp
 	src/states/browse_state.cpp
 	src/states/root_state.cpp
+	src/states/search_state.cpp
 	src/sort/merge_sort.cpp
 )

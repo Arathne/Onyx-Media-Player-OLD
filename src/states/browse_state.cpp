@@ -32,20 +32,38 @@ State* BrowseState::process (void)
 				if (entry.is_directory())
 				{
 					Log::add("RD/ " + entry.get_absolute_path());
-					FileManager::search(entry.get_absolute_path().c_str());
-        				Carousel::set_list(FileManager::get_all());
+					
+					if (entry.get_name() == ". . .")
+					{
+						int previous_carousel_index = FileManager::go_back();
+
+						if (previous_carousel_index >= 0)
+						{
+							Carousel::set_list(FileManager::get_all());
+							Carousel::set_index(previous_carousel_index);
+						}
+						
+						if (entry.get_name() == Carousel::get_current_file().get_name())
+						{
+							run_state = false;
+						}
+					}
+					else
+					{
+						FileManager::search(entry, Carousel::get_index());
+        					Carousel::set_list(FileManager::get_all());
+					}
 				}
 			}
 		}
 		else if (Input::began(SCE_CTRL_CIRCLE))
 		{
-			std::string parent_dir = FileManager::get_parent_directory();
-			
-			if (parent_dir != FileManager::get_current_directory())
+			int previous_carousel_index = FileManager::go_back();
+
+			if (previous_carousel_index >= 0)
 			{
-				Log::add("RD/ " + parent_dir);
-				FileManager::search(parent_dir.c_str());
-        			Carousel::set_list(FileManager::get_all());
+				Carousel::set_list(FileManager::get_all());
+				Carousel::set_index(previous_carousel_index);
 			}
 			else
 			{

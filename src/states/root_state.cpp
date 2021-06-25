@@ -1,6 +1,8 @@
 #include <states/root_state.h>
 
-RootState::RootState (void) {}
+RootState::RootState (void):
+	carousel_index_(0)
+{}
 
 RootState::~RootState (void) {}
 
@@ -15,8 +17,8 @@ State* RootState::process (void)
 	options.push_back(ux0);
 
 	Carousel::set_list(options);
+	Carousel::set_index(carousel_index_);
 	
-
 	State* next_state = nullptr;
 	bool run_state = true;
 	
@@ -48,6 +50,8 @@ State* RootState::process (void)
 		Log::draw();
 		Renderer::swap_buffer();
 	}
+
+	carousel_index_ = Carousel::get_index();
 
 	return new BrowseState();
 }

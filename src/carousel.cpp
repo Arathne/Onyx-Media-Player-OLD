@@ -25,7 +25,8 @@ void Carousel::set_list (std::vector<File> entries)
 {
 	instance.entries_.clear();
 	instance.entries_ = entries;
-	instance.index_ = 0;
+	instance.index_ = 1;
+	check(instance.index_);
 }
 
 std::vector<File> Carousel::get_list (void)
@@ -41,6 +42,17 @@ File Carousel::get_current_file (void)
 bool Carousel::is_list_empty (void)
 {
 	return instance.entries_.empty();
+}
+
+void Carousel::set_index (int value)
+{
+	instance.index_ = value;
+	check(instance.index_);
+}
+
+int Carousel::get_index (void)
+{
+	return instance.index_;
 }
 
 void Carousel::check (int & value)

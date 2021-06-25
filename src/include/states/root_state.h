@@ -3,6 +3,7 @@
 
 #include <states/state.h>
 #include <states/browse_state.h>
+#include <states/search_state.h>
 #include <carousel.h>
 #include <vector>
 
@@ -14,6 +15,9 @@ class RootState : public State
 
 		State* process (void);
 		const char* get_name() const;
+
+	private:
+		int carousel_index_;
 
 };
 

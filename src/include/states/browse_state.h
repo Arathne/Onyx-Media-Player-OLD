@@ -1,9 +1,8 @@
 #ifndef BROWSE_STATE_H
 #define BROWSE_STATE_H
 
-#include <carousel.h>
-#include <file_manager.h>
 #include <states/state.h>
+#include <carousel.h>
 
 class BrowseState : public State
 {

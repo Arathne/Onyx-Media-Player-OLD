@@ -4,6 +4,8 @@
 #include <graphics/renderer.h>
 #include <input.h>
 #include <log.h>
+#include <file.h>
+#include <file_manager.h>
 
 class State
 {

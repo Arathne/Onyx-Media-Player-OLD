@@ -2,7 +2,7 @@
 #define INITIAL_STATE_H
 
 #include <states/state.h>
-#include <states/browse_state.h>
+#include <states/root_state.h>
 
 class InitialState : public State
 {

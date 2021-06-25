@@ -6,7 +6,7 @@ InitialState::~InitialState (void) {}
 
 State* InitialState::process (void)
 {
-	return new BrowseState();
+	return new RootState();
 }
 
 const char* InitialState::get_name() const

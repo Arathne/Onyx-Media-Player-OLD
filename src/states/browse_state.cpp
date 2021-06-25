@@ -6,12 +6,13 @@ BrowseState::~BrowseState (void) {}
 
 State* BrowseState::process (void) 
 {
-	FileManager::search("ux0:");
+	State* next_state = nullptr;
+	bool run_state = true;
+
 	Carousel::set_list(FileManager::get_all());
-	
-	while (true)
+
+	while (run_state)
 	{
-		Renderer::clear();
 		Input::poll();
 		
 		if (Input::began(SCE_CTRL_UP))
@@ -22,7 +23,8 @@ State* BrowseState::process (void)
 		{
 			Carousel::down();
 		}
-		else if (Input::began(SCE_CTRL_CROSS))
+		
+		if (Input::began(SCE_CTRL_CROSS))
 		{
 			if (Carousel::is_list_empty() == false)
 			{
@@ -45,15 +47,19 @@ State* BrowseState::process (void)
 				FileManager::search(parent_dir.c_str());
         			Carousel::set_list(FileManager::get_all());
 			}
+			else
+			{
+				run_state = false;
+			}
 		}
 
+		Renderer::clear();
 		Carousel::draw();
-
 		Log::draw();
 		Renderer::swap_buffer();
 	}
 
-	return this;
+	return next_state;
 }
 
 const char* BrowseState::get_name() const

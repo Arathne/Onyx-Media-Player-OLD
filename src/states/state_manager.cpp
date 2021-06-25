@@ -21,15 +21,19 @@ int StateManager::process (void)
 		{
 			if (next == nullptr)
 			{
-				Log::add(std::string("POP :: ") + std::string(current->get_name()));
+				Log::add(std::string("POP/ :: ") + std::string(current->get_name()));
+				
+				delete instance.stack_.top();			
 				instance.stack_.pop();
 
-				if (instance.stack_.empty())
+				Log::add(std::string("NOW/ :: ") + std::string(instance.stack_.top()->get_name()));
+
+				if (instance.stack_.size() <= 1)
 					return -1;
 			}
 			else
 			{
-				Log::add(std::string("PUSH :: ") + std::string(next->get_name()));
+				Log::add(std::string("PUSH/ :: ") + std::string(next->get_name()));
 				instance.stack_.push(next);
 			}
 		}

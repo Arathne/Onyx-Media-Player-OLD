@@ -14,6 +14,11 @@ void Input::poll (void)
 {
 	instance.previous_ = instance.current_;
 	sceCtrlPeekBufferPositive(0, &instance.current_, 1);
+
+	if (Input::began(SCE_CTRL_SELECT))
+	{
+		Log::enable(!Log::is_enabled());
+	}
 }
 
 bool Input::began (SceCtrlButtons button)

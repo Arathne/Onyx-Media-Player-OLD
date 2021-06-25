@@ -12,6 +12,8 @@ class Log
 		
 		static void add (std::string content);
 		static void draw (void);
+		static void enable (bool state);
+		static bool is_enabled (void);
 
 	private:
 		static Log instance;
@@ -19,6 +21,7 @@ class Log
 
 		std::vector<std::string> list;
 		int max_size;
+		bool enabled_;
 };
 
 #endif

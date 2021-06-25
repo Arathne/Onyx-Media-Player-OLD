@@ -10,15 +10,9 @@ State* RootState::process (void)
 {
 	std::vector<File> options;
 	
-	File developer("developer", "ux0:/vpk/developer", true);
-	File ux0("ux0:", "ux0:", true);
-	
-	options.push_back(developer);
-	options.push_back(ux0);
-
-	Carousel::set_list(options);
+	RootState::update_carousel();
 	Carousel::set_index(carousel_index_);
-	
+
 	State* next_state = nullptr;
 	bool run_state = true;
 	
@@ -44,8 +38,16 @@ State* RootState::process (void)
 			Log::add("RD/ " + entry.get_absolute_path());
 			FileManager::search(entry.get_absolute_path().c_str());
 		}
+		if (Input::began(SCE_CTRL_TRIANGLE))
+		{
+			Database::remove_shortcut_at(Carousel::get_index());
+			int index = Carousel::get_index();
+			RootState::update_carousel();
+			Carousel::set_index(index);
+		}
 
 		Renderer::clear();
+		Video::draw();
 		Carousel::draw();
 		Log::draw();
 		Renderer::swap_buffer();
@@ -54,6 +56,15 @@ State* RootState::process (void)
 	carousel_index_ = Carousel::get_index();
 
 	return new BrowseState();
+}
+
+void RootState::update_carousel (void)
+{
+	std::vector<File> list = Database::get_shortcuts();
+	list.push_back(File("ux0:", "ux0:", true));
+	list.push_back(File("uma0:", "uma0:", true));
+	
+	Carousel::set_list(list);
 }
 
 const char* RootState::get_name() const 

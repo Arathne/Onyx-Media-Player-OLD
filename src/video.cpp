@@ -8,6 +8,8 @@
  *	    https://github.com/Arathne/vita-graphic-samples/tree/master/vita2d/video
  *	    https://github.com/Rinnegatamante/lpp-vita/tree/3dff18e5083b5f2288e7bcac51e0dce69ed3e70c
  *	    https://github.com/SonicMastr/Vita-Media-Player
+ *
+ * IMPORTANT: sometimes AvPlayer fails to initalize and the only way to fix it is to restart the vita. I think this is an issue with vitasdk rather than my code being buggy.
 */
 
 #include <video.h>

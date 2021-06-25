@@ -3,6 +3,8 @@
 
 #include <states/state.h>
 #include <carousel.h>
+#include <database.h>
+#include <video.h>
 
 class BrowseState : public State
 {

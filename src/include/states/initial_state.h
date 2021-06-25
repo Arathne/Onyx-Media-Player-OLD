@@ -3,6 +3,7 @@
 
 #include <states/state.h>
 #include <states/root_state.h>
+#include <psp2/io/stat.h>
 
 class InitialState : public State
 {

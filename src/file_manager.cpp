@@ -12,16 +12,8 @@ void FileManager::search (File file, int carousel_index)
 {
 	std::string path = file.get_absolute_path();
 
-	//if (file.get_name() != ". . .")
-	//{
-		SearchState state(path, carousel_index);
-		instance.history_.push(state);
-	//}
-	//else
-	//{
-		//if (instance.history_.empty() == false)
-		//	instance.history_.pop();
-	//}
+	SearchState state(path, carousel_index);
+	instance.history_.push(state);
 
 	FileManager::search(path.c_str());
 }

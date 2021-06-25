@@ -4,6 +4,7 @@
 #include <states/state.h>
 #include <states/browse_state.h>
 #include <states/search_state.h>
+#include <database.h>
 #include <carousel.h>
 #include <vector>
 
@@ -18,6 +19,8 @@ class RootState : public State
 
 	private:
 		int carousel_index_;
+
+		void update_carousel (void);
 
 };
 

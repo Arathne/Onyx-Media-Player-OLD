@@ -6,6 +6,8 @@ InitialState::~InitialState (void) {}
 
 State* InitialState::process (void)
 {
+	sceIoMkdir("ux0:/data/onyx", 0777);
+	
 	return new RootState();
 }
 

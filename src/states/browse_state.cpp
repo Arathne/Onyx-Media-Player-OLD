@@ -54,6 +54,10 @@ State* BrowseState::process (void)
         					Carousel::set_list(FileManager::get_all());
 					}
 				}
+				else
+				{
+					Video::open(entry.get_absolute_path().c_str());
+				}
 			}
 		}
 		else if (Input::began(SCE_CTRL_CIRCLE))
@@ -70,8 +74,17 @@ State* BrowseState::process (void)
 				run_state = false;
 			}
 		}
-
+		else if (Input::began(SCE_CTRL_TRIANGLE))
+		{
+			File entry = Carousel::get_current_file();
+                        if (entry.is_directory())
+			{
+				Database::add_shortcut(entry.get_name(), entry.get_absolute_path());
+			}
+		}
+		
 		Renderer::clear();
+		Video::draw();
 		Carousel::draw();
 		Log::draw();
 		Renderer::swap_buffer();
@@ -84,32 +97,3 @@ const char* BrowseState::get_name() const
 {
 	return "browse state";
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*float radius = 175;
-double angle = 0;
-int size = 15;
-for (int i = 0; i < size; i++)
-{
-	float x = radius * cos(angle*PI/180);
-	float y = radius * sin(angle*PI/180) + (544/2);	
-
-	Renderer::draw_text("X", x, y, 1.0f, Color(0, 255, 0, 255));
-
-	angle += 360/size;
-}*/

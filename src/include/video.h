@@ -6,14 +6,13 @@
 #include <psp2/sysmodule.h>
 #include <psp2/avplayer.h>
 #include <psp2/audioout.h> 
+#include <graphics/renderer.h>
+#include <graphics/video_texture.h>
 
 #include <stdlib.h>
 #include <malloc.h>
 #include <cstdint>
 #include <cstring>
-
-#include <graphics/renderer.h>
-#include <graphics/video_texture.h>
 
 #define ALIGN(x, a)	((((unsigned int)x)+((a)-1u))&(~((a)-1u)))
 #define PCM_BUFFER 4096

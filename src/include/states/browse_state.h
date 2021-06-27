@@ -4,6 +4,7 @@
 #include <states/state.h>
 #include <carousel.h>
 #include <database.h>
+#include <settings.h>
 #include <video.h>
 
 class BrowseState : public State
@@ -14,6 +15,21 @@ class BrowseState : public State
 
                 State* process (void);
 		const char* get_name() const;
+	
+	private:
+		bool run_state_;
+		State* next_state_;
+		
+		bool auto_play_;
+		std::string video_path_;
+
+		void play_video (void);
+
+		void check_inputs (void);
+		void check_preview (void);
+		void check_vertical_movement (void);
+		void check_change_directories (void);
+		void check_add_shortcut (void);
 };
 
 #endif

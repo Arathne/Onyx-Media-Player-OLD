@@ -45,6 +45,10 @@ State* RootState::process (void)
 			RootState::update_carousel();
 			Carousel::set_index(index);
 		}
+		if (Input::began(SCE_CTRL_RTRIGGER))
+		{
+			Video::close();
+		}
 
 		Renderer::clear();
 		Video::draw();

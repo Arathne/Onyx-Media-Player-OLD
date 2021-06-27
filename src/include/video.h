@@ -23,12 +23,16 @@ class Video
 		~Video (void);
 
 		static void open (const char* path);
+		static void close (void);
 		static void play (void);
 		static void pause (void);
-
+		
+		static bool is_closed (void);
 		static bool isActive (void);
 		static uint64_t getTime (void);
 		
+		static void random_jump (void);
+
 		static void draw (void);
 		
 	private:
@@ -38,10 +42,12 @@ class Video
 		SceAvPlayerInitData init_data;
 		SceAvPlayerHandle player_;
 		VideoTexture* frame_;
-
+		
 		SceAvPlayerFrameInfo audio_info_;
 		SceAvPlayerFrameInfo frame_info_;
 		
+		bool closed_;
+
 		static void* allocate_gpu (void* arg, uint32_t alignment, uint32_t size);
 		static void deallocate_gpu (void* jumpback, void* ptr);
 		static void* allocate (void* arg, uint32_t alignment, uint32_t size);

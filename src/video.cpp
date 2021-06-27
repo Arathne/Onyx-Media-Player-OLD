@@ -53,6 +53,7 @@ void Video::reset (void)
 		delete frame_;
 	
 	frame_ = new VideoTexture();
+	closed_ = false;
 
 	sceAvPlayerClose(player_);
 	player_ = sceAvPlayerInit(&init_data);
@@ -77,6 +78,17 @@ void Video::play (void)
 	sceAvPlayerResume(instance.player_);
 }
 
+void Video::close (void)
+{
+	Video::pause();
+	instance.closed_ = true;
+}
+
+bool Video::is_closed (void)
+{
+	return instance.closed_;
+}
+
 bool Video::isActive (void)
 {
 	if (sceAvPlayerIsActive(instance.player_) == SCE_TRUE)
@@ -90,9 +102,14 @@ uint64_t Video::getTime (void)
 	return sceAvPlayerCurrentTime(instance.player_);
 }
 
+void Video::random_jump (void)
+{
+	// need to find a way to get total time of video before proceeding
+}
+
 void Video::draw (void)
 {
-	if (Video::isActive())
+	if (Video::isActive() && instance.closed_ == false)
 	{
 		instance.frame_update();
 		Renderer::draw_texture(*instance.frame_, 0, 0);

@@ -149,6 +149,12 @@ void BrowseState::check_change_directories (void)
 					Carousel::set_list(FileManager::get_all());
 				}
 			}
+			else
+			{
+				Log::add(entry.get_absolute_path());
+				next_state_ = new VideoState(entry.get_absolute_path());	
+				run_state_ = false;
+			}
 		}
 	}
 	else if (Input::began(SCE_CTRL_CIRCLE))

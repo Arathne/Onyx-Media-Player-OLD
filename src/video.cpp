@@ -13,6 +13,7 @@
 */
 
 #include <video.h>
+#include <log.h>
 
 Video Video::instance;
 
@@ -66,22 +67,30 @@ void Video::open (const char* path)
 {
 	instance.reset();
 	sceAvPlayerAddSource(instance.player_, path);
+	instance.playing_ = true;
 }
 
 void Video::pause (void)
 {
 	sceAvPlayerPause(instance.player_);
+	instance.playing_ = false;
 }
 
 void Video::play (void)
 {
 	sceAvPlayerResume(instance.player_);
+	instance.playing_ = true;
 }
 
 void Video::close (void)
 {
 	Video::pause();
 	instance.closed_ = true;
+}
+
+bool Video::is_playing (void)
+{
+	return instance.playing_;
 }
 
 bool Video::is_closed (void)

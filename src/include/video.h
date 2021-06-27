@@ -28,6 +28,7 @@ class Video
 		static void pause (void);
 		
 		static bool is_closed (void);
+		static bool is_playing (void);
 		static bool isActive (void);
 		static uint64_t getTime (void);
 		
@@ -46,6 +47,7 @@ class Video
 		SceAvPlayerFrameInfo audio_info_;
 		SceAvPlayerFrameInfo frame_info_;
 		
+		bool playing_;
 		bool closed_;
 
 		static void* allocate_gpu (void* arg, uint32_t alignment, uint32_t size);

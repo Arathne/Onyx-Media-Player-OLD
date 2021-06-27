@@ -7,8 +7,8 @@ Renderer::Renderer (void)
 	vita2d_init();
 	Renderer::set_clear_color(0, 0, 0, 255);
 	vita2d_set_vblank_wait(true);
-	
 	pgf_font = vita2d_load_default_pgf();
+	TextureManager::load_textures();
 }
 
 Renderer::~Renderer (void)
@@ -53,3 +53,18 @@ void Renderer::draw_texture (Texture & texture, float x, float y)
 	}
 }
 
+void Renderer::draw_texture (Texture & texture, float x, float y, Color color)
+{
+	if (texture.get_vita2d_ptr() != nullptr)
+	{
+		vita2d_draw_texture_tint(texture.get_vita2d_ptr(), x, y, color.convert_to_vita2d());
+	}
+}
+
+void Renderer::draw_texture (Texture & texture, float x, float y, float scale_x, float scale_y)
+{
+	if (texture.get_vita2d_ptr() != nullptr)
+	{
+		vita2d_draw_texture_scale(texture.get_vita2d_ptr(), x, y, scale_x, scale_y);
+	}
+}

@@ -6,15 +6,15 @@
 class PNG_Texture : public Texture
 {
 	public:
+		PNG_Texture (void);
 		PNG_Texture (const char* path);
 		~PNG_Texture (void);
 		
+		void load (const char* path);
 		const vita2d_texture* get_vita2d_ptr (void) const; 
 		
 
 	private:
-		PNG_Texture (void);
-		
 		vita2d_texture* texture_;
 };
 

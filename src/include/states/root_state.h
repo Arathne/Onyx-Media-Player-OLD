@@ -7,7 +7,6 @@
 #include <database.h>
 #include <carousel.h>
 #include <vector>
-#include <video.h>
 
 class RootState : public State
 {

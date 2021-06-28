@@ -28,6 +28,7 @@ State* VideoState::process (void)
 		if (texture_ != nullptr)
 			Renderer::draw_texture(*texture_, 960-150, 50);
 		
+		Log::draw();
 		Renderer::swap_buffer();
 	}
 

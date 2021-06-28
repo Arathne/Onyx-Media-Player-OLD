@@ -134,6 +134,17 @@ void Video::frame_update (void)
 			instance.frame_info_.details.video.width,
 			instance.frame_info_.details.video.height
 		);
+		
+		SceAvPlayerStreamInfo video_stream;
+		memset(&video_stream, 0, sizeof(SceAvPlayerStreamInfo));
+		sceAvPlayerGetStreamInfo(instance.player_, SCE_AVPLAYER_VIDEO, &video_stream);
+		instance.duration_ = video_stream.duration;
+		
+		if (instance.frame_info_.timeStamp >= instance.duration_)
+		{
+			Log::add("DONE");
+			instance.closed_ = true;
+		}
 	}
 }
 

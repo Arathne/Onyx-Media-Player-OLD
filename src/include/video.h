@@ -44,6 +44,8 @@ class Video
 		SceAvPlayerHandle player_;
 		VideoTexture* frame_;
 		
+		uint64_t duration_;
+
 		SceAvPlayerFrameInfo audio_info_;
 		SceAvPlayerFrameInfo frame_info_;
 		
@@ -62,4 +64,26 @@ class Video
 		void reset (void);
 };
 
+// currently missing in vitasdk header by mistake
+extern "C" {
+	typedef enum SceAvPlayerStreamType {
+		SCE_AVPLAYER_VIDEO,
+		SCE_AVPLAYER_AUDIO,
+		SCE_AVPLAYER_TIMEDTEXT,
+		SCE_AVPLAYER_UNKNOWN
+	} SceAvPlayerStreamType;
+
+	typedef struct SceAvPlayerStreamInfo {
+		uint32_t type;
+		uint8_t reserved[4];
+		SceAvPlayerStreamDetails details;
+		uint64_t duration;
+		uint64_t startTime;
+	} SceAvPlayerStreamInfo;
+
+	int32_t sceAvPlayerStreamCount (SceAvPlayerHandle h);
+	int32_t sceAvPlayerGetStreamInfo (SceAvPlayerHandle h, uint32_t argStreamID, SceAvPlayerStreamInfo* argInfo);
+	int32_t sceAvPlayerEnableStream (SceAvPlayerHandle h, uint32_t argStreamID);
+	int32_t sceAvPlayerDisableStream (SceAvPlayerHandle h, uint32_t argStreamID);
+}
 #endif

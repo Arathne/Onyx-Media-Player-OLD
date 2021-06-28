@@ -21,7 +21,7 @@ State* BrowseState::process (void)
 		BrowseState::check_inputs();
 
 		Renderer::clear();
-		Video::draw();
+		//Video::draw();
 		Carousel::draw();
 		Log::draw();
 		Renderer::swap_buffer();
@@ -32,11 +32,11 @@ State* BrowseState::process (void)
 
 void BrowseState::play_video (void)
 {
-	File entry = Carousel::get_current_file();
+	/*File entry = Carousel::get_current_file();
 	if (entry.is_directory() == false)
 	{
-		Video::open(entry.get_absolute_path().c_str());
-	}
+		//Video::open(entry.get_absolute_path().c_str());
+	}*/
 }
 
 void BrowseState::check_inputs (void)
@@ -51,7 +51,7 @@ void BrowseState::check_preview (void)
 {
 	if (Input::began(SCE_CTRL_RTRIGGER))
 	{
-		Settings::set_auto_play(false);
+		/*Settings::set_auto_play(false);
 		BrowseState::play_video();
 		
 		File entry = Carousel::get_current_file();
@@ -74,7 +74,7 @@ void BrowseState::check_preview (void)
 		{
 			Video::close();
 			video_path_ = "";
-		}
+		}*/
 	}
 
 	if (Input::began(SCE_CTRL_LTRIGGER))
@@ -91,7 +91,7 @@ void BrowseState::check_vertical_movement (void)
 
 		if (Settings::get_auto_play())
 		{
-			BrowseState::play_video();
+			//BrowseState::play_video();
 		}
 	}
 	else if (Input::began(SCE_CTRL_DOWN))

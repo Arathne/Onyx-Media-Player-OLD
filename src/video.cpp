@@ -1,27 +1,13 @@
-/* NOTES: this class cannot take advantage of c++ classes because the audio thread method is required to be static which wouldn't be a problem if I could pass
- *        parameters to it. Ideally, I wanted it to be able to open multiple videos at once. Also, the code would have been much easier to read.
- *
- *	  another thing to keep in mind is that the player needs to be completely closed and reinitialized before playing another video. Meaning, all threads
- *	  that the avplayer made will be closed. Not ideal performance wise. Fortunately, playing a video is near instant and shouldn't be an issue.
- *
- *        here are some references, the first one is as simple as it gets.
- *	    https://github.com/Arathne/vita-graphic-samples/tree/master/vita2d/video
- *	    https://github.com/Rinnegatamante/lpp-vita/tree/3dff18e5083b5f2288e7bcac51e0dce69ed3e70c
- *	    https://github.com/SonicMastr/Vita-Media-Player
- *
- * IMPORTANT: sometimes AvPlayer fails to initalize and the only way to fix it is to restart the vita. I think this is an issue with vitasdk rather than my code being buggy.
-*/
-
 #include <video.h>
 #include <log.h>
 
-Video Video::instance;
+Video::Video (void) {}
 
-int* a = new int;
-
-Video::Video (void)
+Video::Video (std::string path)
 {
 	sceSysmoduleLoadModule(SCE_SYSMODULE_AVPLAYER);
+	
+	SceAvPlayerInitData init_data;
 	
 	memset(&frame_info_, 0, sizeof(SceAvPlayerFrameInfo));
 	memset(&init_data, 0, sizeof(SceAvPlayerInitData));
@@ -35,149 +21,87 @@ Video::Video (void)
 	init_data.numOutputVideoFrameBuffers = 1;
 	init_data.autoStart = true;
 	init_data.debugLevel = 3;
-	
-	audio_thread_uid_ = sceKernelCreateThread("VideoAudioOutput", audio_thread, 0x10000100, 0x4000, 0, 0, nullptr);
-}
 
-Video::~Video (void)
-{
-	sceKernelDeleteThread(Video::audio_thread_uid_);
-	sceAvPlayerClose(player_);
-	
-	if (frame_ != nullptr)
-		delete frame_;
-}
-
-void Video::reset (void)
-{
-	if (frame_ != nullptr)
-		delete frame_;
-	
-	frame_ = new VideoTexture();
-	closed_ = false;
-
-	sceAvPlayerClose(player_);
 	player_ = sceAvPlayerInit(&init_data);
 	sceAvPlayerSetLooping(player_, false);
 	
-	sceKernelStartThread(audio_thread_uid_, 0, nullptr);
+	sceAvPlayerAddSource(player_, path.c_str());
+	
+	audio_.set_video_player(player_);
+	audio_.start();
+
+	playing_ = true;
 }
 
-void Video::open (const char* path)
+Video::~Video (void) 
 {
-	instance.reset();
-	sceAvPlayerAddSource(instance.player_, path);
-	instance.playing_ = true;
-}
-
-void Video::pause (void)
-{
-	sceAvPlayerPause(instance.player_);
-	instance.playing_ = false;
+	sceAvPlayerClose(player_);
 }
 
 void Video::play (void)
 {
-	sceAvPlayerResume(instance.player_);
-	instance.playing_ = true;
+	sceAvPlayerResume(player_);	
 }
 
-void Video::close (void)
+void Video::pause (void)
 {
-	Video::pause();
-	instance.closed_ = true;
+	sceAvPlayerPause(player_);
+}
+
+void Video::restart (void)
+{
+	// waiting to be implemented
+}
+
+uint64_t Video::get_current_time (void)
+{
+	return sceAvPlayerCurrentTime(player_);
+}
+
+uint64_t Video::get_total_time (void)
+{
+	return total_time_;
 }
 
 bool Video::is_playing (void)
 {
-	return instance.playing_;
+	return playing_;
 }
 
-bool Video::is_closed (void)
+bool Video::is_finished (void)
 {
-	return instance.closed_;
-}
-
-bool Video::isActive (void)
-{
-	if (sceAvPlayerIsActive(instance.player_) == SCE_TRUE)
+	if (Video::get_current_time() >= total_time_)
+	{
 		return true;
-	else
-		return false;
-}
-
-uint64_t Video::getTime (void)
-{
-	return sceAvPlayerCurrentTime(instance.player_);
-}
-
-void Video::random_jump (void)
-{
-	// need to find a way to get total time of video before proceeding
-}
-
-void Video::draw (void)
-{
-	if (Video::isActive() && instance.closed_ == false)
-	{
-		instance.frame_update();
-		Renderer::draw_texture(*instance.frame_, 0, 0);
 	}
+
+	return false;
 }
 
-void Video::frame_update (void)
+void Video::update (void)
 {
-	if (sceAvPlayerGetVideoData(player_, &instance.frame_info_))
+	if (sceAvPlayerGetVideoData(player_, &frame_info_))
 	{
-		instance.frame_->update(
-			instance.frame_info_.pData,
-			instance.frame_info_.details.video.width,
-			instance.frame_info_.details.video.height
+		frame_.update(
+			frame_info_.pData,
+			frame_info_.details.video.width,
+			frame_info_.details.video.height
 		);
 		
 		SceAvPlayerStreamInfo video_stream;
 		memset(&video_stream, 0, sizeof(SceAvPlayerStreamInfo));
-		sceAvPlayerGetStreamInfo(instance.player_, SCE_AVPLAYER_VIDEO, &video_stream);
-		instance.duration_ = video_stream.duration;
-		
-		if (instance.frame_info_.timeStamp >= instance.duration_)
-		{
-			Log::add("DONE");
-			instance.closed_ = true;
-		}
+		sceAvPlayerGetStreamInfo(player_, SCE_AVPLAYER_VIDEO, &video_stream);
+		total_time_ = video_stream.duration;
 	}
 }
 
-SceInt32 Video::audio_thread (SceSize args, void* argp)
+void Video::draw (void)
 {
-	memset(&instance.audio_info_, 0, sizeof(SceAvPlayerFrameInfo));
-
-	uint32_t audioSampleRate = 48000;
-	uint16_t channelCount = 2;
-	
-	SceUID audioPort = sceAudioOutOpenPort(SCE_AUDIO_OUT_PORT_TYPE_BGM, (PCM_BUFFER/channelCount/sizeof(int16_t)), audioSampleRate, SCE_AUDIO_OUT_MODE_STEREO);
-	
-	while (sceAvPlayerIsActive(instance.player_))
+	if (sceAvPlayerIsActive(player_) && Video::is_finished() == false)
 	{
-		if (sceAvPlayerGetAudioData(instance.player_, &instance.audio_info_))
-		{
-			if (audioSampleRate != instance.audio_info_.details.audio.sampleRate || channelCount != instance.audio_info_.details.audio.channelCount)
-			{
-				audioSampleRate = instance.audio_info_.details.audio.sampleRate;
-				channelCount = instance.audio_info_.details.audio.channelCount;
-				
-				SceAudioOutMode mode = (channelCount == 1) ? SCE_AUDIO_OUT_MODE_MONO : SCE_AUDIO_OUT_MODE_STEREO;
-
-				sceAudioOutSetConfig(audioPort, (PCM_BUFFER/channelCount/sizeof(int16_t)), audioSampleRate, mode);
-			}
-
-			sceAudioOutOutput(audioPort, instance.audio_info_.pData);
-		}
+		Video::update();
+		Renderer::draw_texture(frame_, 0, 0);
 	}
-	
-	sceAudioOutReleasePort(audioPort);
-	
-	return sceKernelExitThread(0);
 }
 
 void* Video::allocate (void* arg, uint32_t alignment, uint32_t size)

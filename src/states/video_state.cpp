@@ -12,7 +12,7 @@ VideoState::~VideoState (void) {}
 
 State* VideoState::process (void) 
 {
-	Video::open(path_.c_str());
+	Video video(path_);
 
 	next_state_ = nullptr;
 	run_state_ = true;
@@ -23,7 +23,7 @@ State* VideoState::process (void)
 		VideoState::check_inputs();
 
 		Renderer::clear();
-		Video::draw();
+		video.draw();
 		
 		if (texture_ != nullptr)
 			Renderer::draw_texture(*texture_, 960-150, 50);
@@ -35,25 +35,25 @@ State* VideoState::process (void)
 	return next_state_;
 }
 
+
 void VideoState::check_inputs (void)
 {
 	if (Input::began(SCE_CTRL_CROSS))
 	{
-		if (Video::is_playing())
+		/*if (Video::is_playing())
 		{
-			Video::pause();
+			//Video::pause();
 			texture_ = &TextureManager::get_pause();
 		}
 		else
 		{
-			Video::play();
+			//Video::play();
 			texture_ = &TextureManager::get_play();
-		}
+		}*/
 	}
 	
 	if (Input::began(SCE_CTRL_CIRCLE))
 	{
-		Video::close();
 		run_state_ = false;
 	}
 }

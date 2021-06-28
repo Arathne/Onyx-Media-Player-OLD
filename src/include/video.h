@@ -1,70 +1,58 @@
 #ifndef VIDEO_H
 #define VIDEO_H
 
-#include <psp2/kernel/processmgr.h>
-#include <psp2/kernel/sysmem.h> 
-#include <psp2/sysmodule.h>
-#include <psp2/avplayer.h>
-#include <psp2/audioout.h> 
 #include <graphics/renderer.h>
 #include <graphics/video_texture.h>
+#include <video_audio.h>
+#include <psp2/sysmodule.h>
+#include <psp2/avplayer.h>
 
-#include <stdlib.h>
+#include <string>
 #include <malloc.h>
-#include <cstdint>
 #include <cstring>
+#include <stdint.h>
 
 #define ALIGN(x, a)	((((unsigned int)x)+((a)-1u))&(~((a)-1u)))
-#define PCM_BUFFER 4096
 
 class Video
 {
 	public:
+		Video (std::string path);
 		~Video (void);
 
-		static void open (const char* path);
-		static void close (void);
-		static void play (void);
-		static void pause (void);
-		
-		static bool is_closed (void);
-		static bool is_playing (void);
-		static bool isActive (void);
-		static uint64_t getTime (void);
-		
-		static void random_jump (void);
+		void play (void);
+		void pause (void);
+		void restart (void);
 
-		static void draw (void);
+		uint64_t get_current_time (void);
+		uint64_t get_total_time (void);
 		
+		bool is_playing (void);
+		bool is_finished (void);
+
+		void draw (void);
+
 	private:
-		static Video instance;
 		Video (void);
 		
-		SceAvPlayerInitData init_data;
 		SceAvPlayerHandle player_;
-		VideoTexture* frame_;
 		
-		uint64_t duration_;
+		uint64_t total_time_;
+		bool playing_;
 
-		SceAvPlayerFrameInfo audio_info_;
+		VideoTexture frame_;
 		SceAvPlayerFrameInfo frame_info_;
 		
-		bool playing_;
-		bool closed_;
+		VideoAudio audio_;
 
 		static void* allocate_gpu (void* arg, uint32_t alignment, uint32_t size);
 		static void deallocate_gpu (void* jumpback, void* ptr);
 		static void* allocate (void* arg, uint32_t alignment, uint32_t size);
 		static void deallocate (void* arg, void* ptr);
 
-		SceUID audio_thread_uid_;
-		static SceInt32 audio_thread (SceSize args, void* argp);
-
-		void frame_update (void);
-		void reset (void);
+		void update (void);
 };
 
-// currently missing in vitasdk header by mistake
 extern "C" {
 	typedef enum SceAvPlayerStreamType {
 		SCE_AVPLAYER_VIDEO,
@@ -86,4 +74,5 @@ extern "C" {
 	int32_t sceAvPlayerEnableStream (SceAvPlayerHandle h, uint32_t argStreamID);
 	int32_t sceAvPlayerDisableStream (SceAvPlayerHandle h, uint32_t argStreamID);
 }
+
 #endif

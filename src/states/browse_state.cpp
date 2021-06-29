@@ -46,6 +46,7 @@ void BrowseState::check_preview (void)
 		if (entry.is_directory() == false)
 		{
 			VideoManager::open(entry.get_absolute_path().c_str());
+			VideoManager::random_jump();
 		}
 		else
 		{

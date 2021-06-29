@@ -20,7 +20,7 @@ State* VideoState::process (void)
 	next_state_ = nullptr;
 	run_state_ = true;
 	
-	while (run_state_)
+	while (run_state_ && VideoManager::is_finished() == false)
 	{
 		Input::poll();
 		VideoState::check_inputs();
@@ -31,6 +31,9 @@ State* VideoState::process (void)
 		if (texture_ != nullptr)
 			Renderer::draw_texture(*texture_, 960-150, 50);
 		
+		//Log::add( "current: " + std::to_string(VideoManager::get_current_time()));
+		//Log::add( "total: " + std::to_string(VideoManager::get_total_time()));
+
 		Log::draw();
 		Renderer::swap_buffer();
 	}

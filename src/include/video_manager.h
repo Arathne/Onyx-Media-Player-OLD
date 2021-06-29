@@ -15,6 +15,14 @@ class VideoManager
 		static void pause (void);
 		static void draw (void);
 
+		static bool is_finished (void);
+		
+		static void jump (uint64_t time);
+		static void random_jump (void);
+		
+		static uint64_t get_current_time (void);
+		static uint64_t get_total_time (void);
+
 	private:
 		static VideoManager instance;
 		VideoManager (void);

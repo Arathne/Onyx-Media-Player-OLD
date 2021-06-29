@@ -6,11 +6,12 @@
 #include <video_audio.h>
 #include <psp2/sysmodule.h>
 #include <psp2/avplayer.h>
-
 #include <string>
 #include <malloc.h>
 #include <cstring>
 #include <stdint.h>
+#include <cstdlib>
+#include <time.h>
 
 #define ALIGN(x, a)	((((unsigned int)x)+((a)-1u))&(~((a)-1u)))
 
@@ -27,6 +28,9 @@ class Video
 		uint64_t get_current_time (void);
 		uint64_t get_total_time (void);
 		
+		void jump (uint64_t time);
+		void random_jump (void);
+
 		void set_visible (bool state);
 		bool is_finished (void);
 
@@ -37,7 +41,12 @@ class Video
 		
 		SceAvPlayerHandle player_;
 		
+		bool ready_;
 		bool visible_;
+		bool frame_skip_;
+		bool start_random_;
+
+		uint64_t start_time_;
 		uint64_t total_time_;
 
 		VideoTexture frame_;
@@ -49,7 +58,7 @@ class Video
 		static void deallocate_gpu (void* jumpback, void* ptr);
 		static void* allocate (void* arg, uint32_t alignment, uint32_t size);
 		static void deallocate (void* arg, void* ptr);
-
+		
 		void update (void);
 };
 

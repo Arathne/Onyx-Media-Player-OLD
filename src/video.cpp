@@ -10,9 +10,18 @@
 Video::Video (void) {}
 
 Video::Video (std::string path):
-	visible_(true)
+	player_(-1),
+	ready_(false),
+	visible_(true),
+	frame_skip_(false),
+	start_random_(false),
+	start_time_(0),
+	total_time_(UINT64_MAX),
+	frame_(VideoTexture()),
+	audio_(VideoAudio())
 {
 	sceSysmoduleLoadModule(SCE_SYSMODULE_AVPLAYER);
+	srand(time(nullptr));
 
 	SceAvPlayerInitData init_data;
 
@@ -45,7 +54,7 @@ Video::~Video (void)
 
 void Video::play (void)
 {
-	sceAvPlayerResume(player_);	
+	sceAvPlayerResume(player_);
 }
 
 void Video::pause (void)
@@ -57,6 +66,26 @@ void Video::restart (void)
 {
 	sceAvPlayerJumpToTime(player_, 0);
 	sceAvPlayerResume(player_);
+}
+
+void Video::jump (uint64_t time)
+{
+	sceAvPlayerJumpToTime(player_, time);
+}
+
+void Video::random_jump (void)
+{
+	if (ready_)
+	{
+		uint32_t max = total_time_ * 0.65;
+		uint32_t min = total_time_ * 0.2;
+		int rand_time = rand() % (max-min + 1) + min;
+		Video::jump(rand_time);
+	}
+	else
+	{
+		start_random_ = true;
+	}
 }
 
 uint64_t Video::get_current_time (void)
@@ -76,6 +105,11 @@ bool Video::is_finished (void)
 		return true;
 	}
 
+	if (sceAvPlayerIsActive(player_) == false)
+	{
+		return true;
+	}
+
 	return false;
 }
 
@@ -88,24 +122,46 @@ void Video::update (void)
 {
 	if (sceAvPlayerGetVideoData(player_, &frame_info_))
 	{
-		frame_.update(
-			frame_info_.pData,
-			frame_info_.details.video.width,
-			frame_info_.details.video.height
-		);
-
-		SceAvPlayerStreamInfo video_stream;
-		memset(&video_stream, 0, sizeof(SceAvPlayerStreamInfo));
-		sceAvPlayerGetStreamInfo(player_, SCE_AVPLAYER_VIDEO, &video_stream);
-		total_time_ = video_stream.duration;
+		if (ready_ == false)
+		{
+			SceAvPlayerStreamInfo video_stream;
+			memset(&video_stream, 0, sizeof(SceAvPlayerStreamInfo));
+			sceAvPlayerGetStreamInfo(player_, SCE_AVPLAYER_VIDEO, &video_stream);
+		
+			total_time_ = video_stream.duration;
+			ready_ = true;
+			frame_skip_ = true;
+			if (start_random_)
+			{	
+				Video::random_jump();
+			}
+			else
+			{
+				Video::jump(start_time_);
+			}
+		}
+		
+		if (frame_skip_ == false)
+		{
+			frame_.update(
+				frame_info_.pData,
+				frame_info_.details.video.width,
+				frame_info_.details.video.height
+			);
+		}
+		else
+		{
+			frame_skip_ = false;
+		}
 	}
 }
 
 void Video::draw (void)
 {
-	if (sceAvPlayerIsActive(player_) && Video::is_finished() == false && visible_)
+	Video::update();
+	
+	if (sceAvPlayerIsActive(player_) && Video::is_finished() == false && visible_ && ready_ && frame_skip_ <= 0)
 	{
-		Video::update();
 		Renderer::draw_texture(frame_, 0, 0);
 	}
 }

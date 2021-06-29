@@ -4,7 +4,7 @@ Renderer Renderer::instance;
 
 Renderer::Renderer (void)
 {
-	vita2d_init();
+	vita2d_init_advanced(0x800000);
 	Renderer::set_clear_color(0, 0, 0, 255);
 	vita2d_set_vblank_wait(true);
 	pgf_font = vita2d_load_default_pgf();

@@ -47,7 +47,7 @@ State* RootState::process (void)
 		}
 		if (Input::began(SCE_CTRL_RTRIGGER))
 		{
-			// stop video
+			VideoManager::close();
 		}
 
 		Renderer::clear();

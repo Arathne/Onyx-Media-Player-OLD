@@ -1,14 +1,21 @@
+/* here are some references, the first one is as simple as it gets.
+ *    
+ *    https://github.com/Arathne/vita-graphic-samples/tree/master/vita2d/video
+ *    https://github.com/Rinnegatamante/lpp-vita
+ *    https://github.com/SonicMastr/Vita-Media-Player
+*/
+
 #include <video.h>
-#include <log.h>
 
 Video::Video (void) {}
 
-Video::Video (std::string path)
+Video::Video (std::string path):
+	visible_(true)
 {
 	sceSysmoduleLoadModule(SCE_SYSMODULE_AVPLAYER);
-	
+
 	SceAvPlayerInitData init_data;
-	
+
 	memset(&frame_info_, 0, sizeof(SceAvPlayerFrameInfo));
 	memset(&init_data, 0, sizeof(SceAvPlayerInitData));
 
@@ -24,13 +31,11 @@ Video::Video (std::string path)
 
 	player_ = sceAvPlayerInit(&init_data);
 	sceAvPlayerSetLooping(player_, false);
-	
+
 	sceAvPlayerAddSource(player_, path.c_str());
-	
+
 	audio_.set_video_player(player_);
 	audio_.start();
-
-	playing_ = true;
 }
 
 Video::~Video (void) 
@@ -50,7 +55,8 @@ void Video::pause (void)
 
 void Video::restart (void)
 {
-	// waiting to be implemented
+	sceAvPlayerJumpToTime(player_, 0);
+	sceAvPlayerResume(player_);
 }
 
 uint64_t Video::get_current_time (void)
@@ -63,11 +69,6 @@ uint64_t Video::get_total_time (void)
 	return total_time_;
 }
 
-bool Video::is_playing (void)
-{
-	return playing_;
-}
-
 bool Video::is_finished (void)
 {
 	if (Video::get_current_time() >= total_time_)
@@ -76,6 +77,11 @@ bool Video::is_finished (void)
 	}
 
 	return false;
+}
+
+void Video::set_visible (bool state)
+{
+	visible_ = state;
 }
 
 void Video::update (void)
@@ -87,7 +93,7 @@ void Video::update (void)
 			frame_info_.details.video.width,
 			frame_info_.details.video.height
 		);
-		
+
 		SceAvPlayerStreamInfo video_stream;
 		memset(&video_stream, 0, sizeof(SceAvPlayerStreamInfo));
 		sceAvPlayerGetStreamInfo(player_, SCE_AVPLAYER_VIDEO, &video_stream);
@@ -97,7 +103,7 @@ void Video::update (void)
 
 void Video::draw (void)
 {
-	if (sceAvPlayerIsActive(player_) && Video::is_finished() == false)
+	if (sceAvPlayerIsActive(player_) && Video::is_finished() == false && visible_)
 	{
 		Video::update();
 		Renderer::draw_texture(frame_, 0, 0);

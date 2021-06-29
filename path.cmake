@@ -4,6 +4,7 @@ set( SRC_FILES
 	src/input.cpp
 	src/video.cpp
 	src/video_audio.cpp
+	src/video_manager.cpp
 	src/file_manager.cpp
 	src/file.cpp
 	src/carousel.cpp

@@ -21,7 +21,7 @@ State* BrowseState::process (void)
 		BrowseState::check_inputs();
 
 		Renderer::clear();
-		//Video::draw();
+		VideoManager::draw();
 		Carousel::draw();
 		Log::draw();
 		Renderer::swap_buffer();
@@ -32,11 +32,11 @@ State* BrowseState::process (void)
 
 void BrowseState::play_video (void)
 {
-	/*File entry = Carousel::get_current_file();
+	File entry = Carousel::get_current_file();
 	if (entry.is_directory() == false)
 	{
-		//Video::open(entry.get_absolute_path().c_str());
-	}*/
+		VideoManager::open(entry.get_absolute_path().c_str());
+	}
 }
 
 void BrowseState::check_inputs (void)
@@ -51,7 +51,6 @@ void BrowseState::check_preview (void)
 {
 	if (Input::began(SCE_CTRL_RTRIGGER))
 	{
-		/*Settings::set_auto_play(false);
 		BrowseState::play_video();
 		
 		File entry = Carousel::get_current_file();
@@ -60,26 +59,26 @@ void BrowseState::check_preview (void)
 			std::string entry_path = entry.get_absolute_path();
 			if (video_path_ != entry_path)
 			{
-				Video::open(entry_path.c_str());
-				Video::random_jump();
+				VideoManager::open(entry_path.c_str());
+				//Video::random_jump();
 				video_path_ = entry_path;
 			}
 			else
 			{
-				Video::close();
+				VideoManager::close();
 				video_path_ = "";
 			}
 		}
 		else
 		{
-			Video::close();
+			VideoManager::close();
 			video_path_ = "";
-		}*/
+		}
 	}
 
 	if (Input::began(SCE_CTRL_LTRIGGER))
 	{
-		Settings::set_auto_play(!Settings::get_auto_play());
+		//Settings::set_auto_play(!Settings::get_auto_play());
 	}
 }
 
@@ -88,20 +87,10 @@ void BrowseState::check_vertical_movement (void)
 	if (Input::began(SCE_CTRL_UP))
 	{
 		Carousel::up();
-
-		if (Settings::get_auto_play())
-		{
-			//BrowseState::play_video();
-		}
 	}
 	else if (Input::began(SCE_CTRL_DOWN))
 	{
 		Carousel::down();
-
-		if (Settings::get_auto_play())
-		{
-			BrowseState::play_video();
-		}
 	}
 }
 

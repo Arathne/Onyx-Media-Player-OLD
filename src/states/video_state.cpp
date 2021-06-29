@@ -8,11 +8,14 @@ VideoState::VideoState (std::string path):
 	texture_(nullptr)
 {}
 
-VideoState::~VideoState (void) {}
+VideoState::~VideoState (void) 
+{
+	VideoManager::close();
+}
 
 State* VideoState::process (void) 
 {
-	Video video(path_);
+	VideoManager::open(path_);
 
 	next_state_ = nullptr;
 	run_state_ = true;
@@ -23,7 +26,7 @@ State* VideoState::process (void)
 		VideoState::check_inputs();
 
 		Renderer::clear();
-		video.draw();
+		VideoManager::draw();
 		
 		if (texture_ != nullptr)
 			Renderer::draw_texture(*texture_, 960-150, 50);
@@ -40,16 +43,11 @@ void VideoState::check_inputs (void)
 {
 	if (Input::began(SCE_CTRL_CROSS))
 	{
-		/*if (Video::is_playing())
-		{
-			//Video::pause();
-			texture_ = &TextureManager::get_pause();
-		}
-		else
-		{
-			//Video::play();
-			texture_ = &TextureManager::get_play();
-		}*/
+		//VideoManager::pause();
+		//texture_ = &TextureManager::get_pause();
+		
+		//VideoManager::play();
+		//texture_ = &TextureManager::get_play();
 	}
 	
 	if (Input::began(SCE_CTRL_CIRCLE))

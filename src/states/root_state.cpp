@@ -47,11 +47,11 @@ State* RootState::process (void)
 		}
 		if (Input::began(SCE_CTRL_RTRIGGER))
 		{
-			//Video::close();
+			// stop video
 		}
 
 		Renderer::clear();
-		//Video::draw();
+		VideoManager::draw();
 		Carousel::draw();
 		Log::draw();
 		Renderer::swap_buffer();

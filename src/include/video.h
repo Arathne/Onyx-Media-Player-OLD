@@ -27,7 +27,7 @@ class Video
 		uint64_t get_current_time (void);
 		uint64_t get_total_time (void);
 		
-		bool is_playing (void);
+		void set_visible (bool state);
 		bool is_finished (void);
 
 		void draw (void);
@@ -37,8 +37,8 @@ class Video
 		
 		SceAvPlayerHandle player_;
 		
+		bool visible_;
 		uint64_t total_time_;
-		bool playing_;
 
 		VideoTexture frame_;
 		SceAvPlayerFrameInfo frame_info_;

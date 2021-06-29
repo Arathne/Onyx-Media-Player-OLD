@@ -6,7 +6,7 @@
 #include <log.h>
 #include <file.h>
 #include <file_manager.h>
-#include <video.h>
+#include <video_manager.h>
 
 class State
 {

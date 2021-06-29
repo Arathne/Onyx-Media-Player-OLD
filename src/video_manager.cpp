@@ -101,6 +101,14 @@ void VideoManager::random_jump (void)
 	}
 }
 
+void VideoManager::set_trick_normal (void)
+{
+	if (instance.video_ != nullptr)
+	{
+		instance.video_->set_trick_normal();
+	}
+}
+
 void VideoManager::increase_trick_speed (void)
 {
 	if (instance.video_ != nullptr)

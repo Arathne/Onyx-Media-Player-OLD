@@ -36,6 +36,7 @@ class Video
 		bool is_finished (void);
 		
 		void set_trick_speed (SceAvPlayerTrickSpeeds speed);
+		void set_trick_normal (void);
 		void increase_trick_speed (void);
 		void decrease_trick_speed (void);
 		std::string get_trick_speed (void);

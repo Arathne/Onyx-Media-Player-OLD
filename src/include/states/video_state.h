@@ -19,10 +19,11 @@ class VideoState : public State
 		
 		State* next_state_;
         	bool run_state_;
+		
+		bool playing_;
 
 		std::string path_;
 		std::string trick_speed_text_;
-		PNG_Texture* texture_;	
 	
 		void check_inputs (void);
 };

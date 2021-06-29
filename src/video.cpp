@@ -171,13 +171,21 @@ void Video::draw (void)
 	
 	if (sceAvPlayerIsActive(player_) && Video::is_finished() == false && visible_ && ready_)
 	{
-		Renderer::draw_texture(frame_, 0, 0);
+		float scale_x = 960.0f / (float) frame_info_.details.video.width;
+		float scale_y = 544.0f / (float) frame_info_.details.video.height;
+		Renderer::draw_texture(frame_, 0, 0, scale_x, scale_y);
 	}
 }
 
 void Video::set_trick_speed (SceAvPlayerTrickSpeeds speed)
 {
 	sceAvPlayerSetTrickSpeed(player_, speed);
+}
+
+void Video::set_trick_normal (void)
+{
+	speed_ = 3;
+	Video::set_trick_speed(SCE_AVPLAYER_TRICK_SPEED_NORMAL);
 }
 
 void Video::increase_trick_speed (void)

@@ -16,6 +16,7 @@ class Carousel
 		static void down (void);
 
 		static void set_list (std::vector<File> entries);
+		static void set_list (std::vector<File> entries, int index);
 		static bool is_list_empty (void);
 		static void set_index (int value);
 

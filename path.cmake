@@ -9,7 +9,6 @@ set( SRC_FILES
 	src/file.cpp
 	src/carousel.cpp
 	src/database.cpp
-	src/settings.cpp
 	src/texture_manager.cpp
 	src/graphics/renderer.cpp
 	src/graphics/color.cpp

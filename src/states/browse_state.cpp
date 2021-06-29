@@ -3,7 +3,7 @@
 BrowseState::BrowseState (void):
 	run_state_(true),
 	next_state_(nullptr),
-	video_path_("")
+	index_(1)
 {}
 
 BrowseState::~BrowseState (void) {}
@@ -11,9 +11,9 @@ BrowseState::~BrowseState (void) {}
 State* BrowseState::process (void) 
 {
 	next_state_ = nullptr;
-
-	Carousel::set_list(FileManager::get_all());
 	run_state_ = true;
+
+	Carousel::set_list(FileManager::get_all(), index_);
 
 	while (run_state_)
 	{
@@ -30,55 +30,27 @@ State* BrowseState::process (void)
 	return next_state_;
 }
 
-void BrowseState::play_video (void)
-{
-	File entry = Carousel::get_current_file();
-	if (entry.is_directory() == false)
-	{
-		VideoManager::open(entry.get_absolute_path().c_str());
-	}
-}
-
 void BrowseState::check_inputs (void)
 {
 	BrowseState::check_vertical_movement(); // UP - DOWN
 	BrowseState::check_change_directories(); // CROSS - CIRCLE
 	BrowseState::check_add_shortcut(); // TRIANGLE
-	BrowseState::check_preview(); // L-R TRIGGERS
+	BrowseState::check_preview(); // RTRIGGER
 }
 
 void BrowseState::check_preview (void)
 {
 	if (Input::began(SCE_CTRL_RTRIGGER))
 	{
-		BrowseState::play_video();
-		
 		File entry = Carousel::get_current_file();
 		if (entry.is_directory() == false)
 		{
-			std::string entry_path = entry.get_absolute_path();
-			if (video_path_ != entry_path)
-			{
-				VideoManager::open(entry_path.c_str());
-				//Video::random_jump();
-				video_path_ = entry_path;
-			}
-			else
-			{
-				VideoManager::close();
-				video_path_ = "";
-			}
+			VideoManager::open(entry.get_absolute_path().c_str());
 		}
 		else
 		{
 			VideoManager::close();
-			video_path_ = "";
 		}
-	}
-
-	if (Input::began(SCE_CTRL_LTRIGGER))
-	{
-		//Settings::set_auto_play(!Settings::get_auto_play());
 	}
 }
 
@@ -140,8 +112,9 @@ void BrowseState::check_change_directories (void)
 			}
 			else
 			{
-				Log::add(entry.get_absolute_path());
+				Log::add("VID/ " + entry.get_absolute_path());
 				next_state_ = new VideoState(entry.get_absolute_path());	
+				index_ = Carousel::get_index();
 				run_state_ = false;
 			}
 		}

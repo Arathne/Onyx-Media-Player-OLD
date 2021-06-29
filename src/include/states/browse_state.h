@@ -5,7 +5,6 @@
 #include <states/video_state.h>
 #include <carousel.h>
 #include <database.h>
-#include <settings.h>
 
 class BrowseState : public State
 {
@@ -20,10 +19,7 @@ class BrowseState : public State
 		bool run_state_;
 		State* next_state_;
 		
-		bool auto_play_;
-		std::string video_path_;
-
-		void play_video (void);
+		int index_;
 
 		void check_inputs (void);
 		void check_preview (void);

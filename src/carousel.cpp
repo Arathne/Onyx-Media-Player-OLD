@@ -21,6 +21,14 @@ void Carousel::down (void)
 	check(instance.index_);
 }
 
+void Carousel::set_list (std::vector<File> entries, int index)
+{
+	instance.entries_.clear();
+	instance.entries_ = entries;
+	instance.index_ = index;
+	check(instance.index_);
+}
+
 void Carousel::set_list (std::vector<File> entries)
 {
 	instance.entries_.clear();

@@ -13,7 +13,6 @@ Video::Video (std::string path):
 	player_(-1),
 	ready_(false),
 	visible_(true),
-	frame_skip_(false),
 	start_random_(false),
 	start_time_(0),
 	total_time_(UINT64_MAX),
@@ -130,7 +129,7 @@ void Video::update (void)
 		
 			total_time_ = video_stream.duration;
 			ready_ = true;
-			frame_skip_ = true;
+			
 			if (start_random_)
 			{	
 				Video::random_jump();
@@ -140,18 +139,13 @@ void Video::update (void)
 				Video::jump(start_time_);
 			}
 		}
-		
-		if (frame_skip_ == false)
+		else
 		{
 			frame_.update(
 				frame_info_.pData,
 				frame_info_.details.video.width,
 				frame_info_.details.video.height
-			);
-		}
-		else
-		{
-			frame_skip_ = false;
+                        );
 		}
 	}
 }
@@ -160,7 +154,7 @@ void Video::draw (void)
 {
 	Video::update();
 	
-	if (sceAvPlayerIsActive(player_) && Video::is_finished() == false && visible_ && ready_ && frame_skip_ <= 0)
+	if (sceAvPlayerIsActive(player_) && Video::is_finished() == false && visible_ && ready_)
 	{
 		Renderer::draw_texture(frame_, 0, 0);
 	}

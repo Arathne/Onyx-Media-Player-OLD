@@ -43,7 +43,6 @@ class Video
 		
 		bool ready_;
 		bool visible_;
-		bool frame_skip_;
 		bool start_random_;
 
 		uint64_t start_time_;

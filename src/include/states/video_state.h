@@ -21,6 +21,7 @@ class VideoState : public State
         	bool run_state_;
 
 		std::string path_;
+		std::string trick_speed_text_;
 		PNG_Texture* texture_;	
 	
 		void check_inputs (void);

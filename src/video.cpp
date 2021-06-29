@@ -3,9 +3,12 @@
  *    https://github.com/Arathne/vita-graphic-samples/tree/master/vita2d/video
  *    https://github.com/Rinnegatamante/lpp-vita
  *    https://github.com/SonicMastr/Vita-Media-Player
+ *
+ * trick speed is unstable when using sceAvPlayerSetTrickSpeed(), will need a rework
 */
 
 #include <video.h>
+#include <log.h>
 
 Video::Video (void) {}
 
@@ -17,7 +20,19 @@ Video::Video (std::string path):
 	start_time_(0),
 	total_time_(UINT64_MAX),
 	frame_(VideoTexture()),
-	audio_(VideoAudio())
+	audio_(VideoAudio()),
+	speed_(3),
+	trick_speeds_{
+		SCE_AVPLAYER_TRICK_SPEED_REWIND_32X,
+		SCE_AVPLAYER_TRICK_SPEED_REWIND_16X,
+		SCE_AVPLAYER_TRICK_SPEED_REWIND_8X,
+		SCE_AVPLAYER_TRICK_SPEED_NORMAL,
+		SCE_AVPLAYER_TRICK_SPEED_FAST_FORWARD_2X,
+		SCE_AVPLAYER_TRICK_SPEED_FAST_FORWARD_4X,
+		SCE_AVPLAYER_TRICK_SPEED_FAST_FORWARD_8X,
+		SCE_AVPLAYER_TRICK_SPEED_FAST_FORWARD_16X,
+		SCE_AVPLAYER_TRICK_SPEED_FAST_FORWARD_32X
+	}
 {
 	sceSysmoduleLoadModule(SCE_SYSMODULE_AVPLAYER);
 	srand(time(nullptr));
@@ -158,6 +173,104 @@ void Video::draw (void)
 	{
 		Renderer::draw_texture(frame_, 0, 0);
 	}
+}
+
+void Video::set_trick_speed (SceAvPlayerTrickSpeeds speed)
+{
+	sceAvPlayerSetTrickSpeed(player_, speed);
+}
+
+void Video::increase_trick_speed (void)
+{
+	if (ready_)
+	{
+		speed_++;
+
+		if (speed_ >= TRICK_SPEEDS_LIST_SIZE)
+		{
+			speed_ = TRICK_SPEEDS_LIST_SIZE - 1;
+		}
+	
+		Video::set_trick_speed(trick_speeds_[speed_]);
+	}
+}
+
+void Video::decrease_trick_speed (void)
+{
+	if (ready_)
+	{
+		speed_--;
+	
+		if (speed_ < 0)
+		{
+			speed_ = 0;
+		}
+	
+		if (speed_ == 3)
+		{
+			uint64_t time = Video::get_current_time();
+			Video::set_trick_speed(trick_speeds_[speed_]);
+			Video::jump(time);
+		}
+		else
+		{
+			Video::set_trick_speed(trick_speeds_[speed_]);
+		}
+	}
+}
+
+int Video::get_trick_direction (void)
+{
+	int trick = trick_speeds_[speed_];
+	
+	if (trick > 100)
+		return 1;
+	
+	if (trick < 100)
+		return -1;
+
+	return 0;
+}
+
+std::string Video::get_trick_speed (void)
+{
+	std::string out;
+
+	switch(trick_speeds_[speed_])
+	{
+		case SCE_AVPLAYER_TRICK_SPEED_REWIND_32X:
+			out = "x32";
+			break;
+		case SCE_AVPLAYER_TRICK_SPEED_REWIND_16X:
+			out = "x16";
+			break;
+		case SCE_AVPLAYER_TRICK_SPEED_REWIND_8X:
+			out = "x8";
+			break;
+		case SCE_AVPLAYER_TRICK_SPEED_NORMAL:
+			out = "";
+			break;
+		case SCE_AVPLAYER_TRICK_SPEED_FAST_FORWARD_2X:
+			out = "x2";
+			break;
+		case SCE_AVPLAYER_TRICK_SPEED_FAST_FORWARD_4X:
+			out = "x4";
+			break;
+		case SCE_AVPLAYER_TRICK_SPEED_FAST_FORWARD_8X:
+			out = "x8";
+			break;
+		case SCE_AVPLAYER_TRICK_SPEED_FAST_FORWARD_16X:
+			out = "x16";
+			break;
+		case SCE_AVPLAYER_TRICK_SPEED_FAST_FORWARD_32X:
+			out = "x32";
+			break;
+		default:
+			out = "";
+			break;
+	}
+
+	return out;
 }
 
 void* Video::allocate (void* arg, uint32_t alignment, uint32_t size)

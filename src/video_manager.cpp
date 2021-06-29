@@ -100,3 +100,39 @@ void VideoManager::random_jump (void)
 		instance.video_->random_jump();
 	}
 }
+
+void VideoManager::increase_trick_speed (void)
+{
+	if (instance.video_ != nullptr)
+	{
+		instance.video_->increase_trick_speed();
+	}
+}
+
+void VideoManager::decrease_trick_speed (void)
+{
+	if (instance.video_ != nullptr)
+	{
+		instance.video_->decrease_trick_speed();
+	}
+}
+
+std::string VideoManager::get_trick_speed (void)
+{
+	if (instance.video_ != nullptr)
+	{
+		return instance.video_->get_trick_speed();
+	}
+
+	return "";
+}
+
+int VideoManager::get_trick_direction (void)
+{
+	if (instance.video_ != nullptr)
+	{
+		return instance.video_->get_trick_direction();
+	}
+
+	return 0;
+}

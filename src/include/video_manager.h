@@ -22,6 +22,11 @@ class VideoManager
 		
 		static uint64_t get_current_time (void);
 		static uint64_t get_total_time (void);
+		
+		static void increase_trick_speed (void);
+		static void decrease_trick_speed (void);
+		static std::string get_trick_speed (void);
+		static int get_trick_direction (void);
 
 	private:
 		static VideoManager instance;

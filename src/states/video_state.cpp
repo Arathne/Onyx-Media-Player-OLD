@@ -5,6 +5,7 @@ VideoState::VideoState (void) {}
 
 VideoState::VideoState (std::string path):
 	path_(path),
+	trick_speed_text_(""),
 	texture_(nullptr)
 {}
 
@@ -28,11 +29,23 @@ State* VideoState::process (void)
 		Renderer::clear();
 		VideoManager::draw();
 		
+		if (VideoManager::get_trick_direction() > 0)
+		{
+			texture_ = &TextureManager::get_forward();
+			Renderer::draw_text(trick_speed_text_, 960-138, 40, 1.0f);
+		}
+		else if (VideoManager::get_trick_direction() < 0)
+		{	
+			texture_ = &TextureManager::get_backward();
+			Renderer::draw_text(trick_speed_text_, 960-98, 40, 1.0f);
+		}
+		else
+		{
+			texture_ = nullptr;
+		}
+		
 		if (texture_ != nullptr)
 			Renderer::draw_texture(*texture_, 960-150, 50);
-		
-		//Log::add( "current: " + std::to_string(VideoManager::get_current_time()));
-		//Log::add( "total: " + std::to_string(VideoManager::get_total_time()));
 
 		Log::draw();
 		Renderer::swap_buffer();
@@ -46,6 +59,8 @@ void VideoState::check_inputs (void)
 {
 	if (Input::began(SCE_CTRL_CROSS))
 	{
+		
+		
 		//VideoManager::pause();
 		//texture_ = &TextureManager::get_pause();
 		
@@ -56,6 +71,17 @@ void VideoState::check_inputs (void)
 	if (Input::began(SCE_CTRL_CIRCLE))
 	{
 		run_state_ = false;
+	}
+
+	if (Input::began(SCE_CTRL_RTRIGGER))
+	{
+		VideoManager::increase_trick_speed();
+		trick_speed_text_ = VideoManager::get_trick_speed();
+	}
+	else if (Input::began(SCE_CTRL_LTRIGGER))
+	{
+		VideoManager::decrease_trick_speed();
+		trick_speed_text_ = VideoManager::get_trick_speed();
 	}
 }
 

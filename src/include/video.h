@@ -14,6 +14,7 @@
 #include <time.h>
 
 #define ALIGN(x, a)	((((unsigned int)x)+((a)-1u))&(~((a)-1u)))
+#define TRICK_SPEEDS_LIST_SIZE 9
 
 class Video
 {
@@ -33,6 +34,12 @@ class Video
 
 		void set_visible (bool state);
 		bool is_finished (void);
+		
+		void set_trick_speed (SceAvPlayerTrickSpeeds speed);
+		void increase_trick_speed (void);
+		void decrease_trick_speed (void);
+		std::string get_trick_speed (void);
+		int get_trick_direction (void);
 
 		void draw (void);
 
@@ -51,6 +58,9 @@ class Video
 		VideoTexture frame_;
 		SceAvPlayerFrameInfo frame_info_;
 		
+		int speed_;
+		SceAvPlayerTrickSpeeds trick_speeds_[TRICK_SPEEDS_LIST_SIZE];
+
 		VideoAudio audio_;
 
 		static void* allocate_gpu (void* arg, uint32_t alignment, uint32_t size);
